@@ -1,11 +1,13 @@
 package com.bank.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import jakarta.persistence.*;
+
 @Entity
-@Data
+@Table(name = "transactions")
 public class Transaction {
 
     @Id
@@ -13,50 +15,37 @@ public class Transaction {
     private Long id;
 
     private String type;
-    private double amount;
-    private LocalDateTime date = LocalDateTime.now();
+
+    private Double amount;
+
+    @Column(name = "transaction_date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime transactionDate;
 
     @ManyToOne
-    @JoinColumn(name="customer_id")
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
-	public Long getId() {
-		return id;
-	}
+    @PrePersist
+    public void setTransactionDate() {
+        this.transactionDate = LocalDateTime.now();
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    // Getters & Setters
 
-	public String getType() {
-		return type;
-	}
+    public Long getId() { return id; }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public String getType() { return type; }
 
-	public double getAmount() {
-		return amount;
-	}
+    public void setType(String type) { this.type = type; }
 
-	public void setAmount(double amount) {
-		this.amount = amount;
-	}
+    public Double getAmount() { return amount; }
 
-	public LocalDateTime getDate() {
-		return date;
-	}
+    public void setAmount(Double amount) { this.amount = amount; }
 
-	public void setDate(LocalDateTime date) {
-		this.date = date;
-	}
+    public LocalDateTime getTransactionDate() { return transactionDate; }
 
-	public Customer getCustomer() {
-		return customer;
-	}
+    public Customer getCustomer() { return customer; }
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
+    public void setCustomer(Customer customer) { this.customer = customer; }
 }
